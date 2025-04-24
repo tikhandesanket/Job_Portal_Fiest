@@ -1,17 +1,29 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Job
+from django.core.exceptions import ValidationError
 
-class RegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    is_employer = forms.BooleanField(required=False, label="Register as Employer")
+# Remove the import of Profile at the top to avoid circular import
+# from .models import Profile
+
+class RegisterForm(forms.ModelForm):
+    user_type = forms.ChoiceField(choices=[('employer', 'Employer'), ('job_seeker', 'Job Seeker')])
 
     class Meta:
         model = User
-        fields = ["username", "email", "password1", "password2"]
+        fields = ['username', 'password', 'email']
 
-class JobForm(forms.ModelForm):
-    class Meta:
-        model = Job
-        fields = ['title', 'description', 'salary', 'location', 'category', 'company']
+    def save(self, commit=True):
+        user = super(RegisterForm, self).save(commit=False)
+        if commit:
+            user.save()
+        # Lazy import Profile here to avoid circular import
+        from .models import Profile
+        Profile.objects.create(
+            user=user,
+            user_type=self.cleaned_data.get('user_type')
+        )
+        return user
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput())

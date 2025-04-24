@@ -1,24 +1,4 @@
-{% extends 'accounts/base.html' %} {% load static %} {% block content %}
-
-<div
-  style="
-    background-image: url('{% static 'accounts/images/background.png' %}');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    padding: 2rem;
-  "
->
-  <div class="text-center mt-5">
-    <h1 class="display-4">Welcome to JobPortalFiesta</h1>
-    <p class="lead">Find your dream job or post a listing for free.</p>
-    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Get Started</a>
-  </div>
-</div>
-{% endblock %}
+<!-- accounts/templates/accounts/home.html -->
+<h2>Welcome, {{ user.username }}!</h2>
+<p>Here you can find job listings or manage your profile.</p>
+<a href="{% url 'logout' %}">Logout</a>
