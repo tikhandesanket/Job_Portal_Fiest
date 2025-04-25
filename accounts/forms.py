@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+
 # Remove the import of Profile at the top to avoid circular import
 # from .models import Profile
 

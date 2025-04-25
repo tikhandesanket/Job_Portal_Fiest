@@ -70,6 +70,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Job_Portal_Fiesta.wsgi.application'
+LOGIN_REDIRECT_URL = '/redirect-dashboard/'
 
 
 # Database

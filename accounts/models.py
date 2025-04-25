@@ -1,16 +1,10 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.db import models
 from django.contrib.auth.models import User
 
-class RegisterForm(UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        from .models import Profile  
-        self.fields['user_type'] = forms.ChoiceField(
-            choices=Profile.USER_TYPES,
-            required=True
-        )
-
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password1', 'password2']
+class Profile(models.Model):
+    USER_TYPES = (
+        ('recruiter', 'Recruiter'),
+        ('applicant', 'Applicant'),
+    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='account_profile')
+    user_type = models.CharField(max_length=20, choices=USER_TYPES)
