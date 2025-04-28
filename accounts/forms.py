@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 # from .models import Profile
 
 class RegisterForm(forms.ModelForm):
-    user_type = forms.ChoiceField(choices=[('employer', 'Employer'), ('job_seeker', 'Job Seeker')])
+    user_type = forms.ChoiceField(choices=[('applicant', 'Employer'), ('recruiter', 'Job Seeker')])
 
     class Meta:
         model = User
