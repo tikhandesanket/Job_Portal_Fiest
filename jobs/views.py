@@ -4,11 +4,12 @@ from .models import Job
 
 @login_required
 def job_list(request):
-    # If you have real Job records, use this:
-    jobs = Job.objects.all()
     query = request.GET.get('q', '')
-    # If you don't have real records yet, use dummy data temporarily:
-    if not jobs.exists():
+
+    jobs_qs = Job.objects.all()
+    using_dummy_data = not jobs_qs.exists()
+
+    if using_dummy_data:
         jobs = [
             {
                 'title': 'Software Developer',
@@ -23,13 +24,18 @@ def job_list(request):
                 'location': 'Bangalore, India'
             },
         ]
-    jobsList = jobs   
+        if query:
+            jobsList = [job for job in jobs if query.lower() in job['title'].lower()]
+        else:
+            jobsList = jobs
+    else:
+        if query:
+            jobsList = jobs_qs.filter(title__icontains=query)
+        else:
+            jobsList = jobs_qs
 
-    if query:
-        jobsList = [job for job in jobs if query.lower() in job['title'].lower()]
     return render(request, 'jobs/job_list.html', {'jobs': jobsList, 'query': query})
 
-from django.shortcuts import render, redirect
 
 @login_required
 def job_create(request):
