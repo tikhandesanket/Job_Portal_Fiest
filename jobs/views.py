@@ -9,7 +9,7 @@ def job_list(request):
     query = request.GET.get('q', '')
     # If you don't have real records yet, use dummy data temporarily:
     if not jobs.exists():
-        dummy_jobs = [
+        jobs = [
             {
                 'title': 'Software Developer',
                 'description': 'Develop and maintain software applications.',
@@ -22,71 +22,43 @@ def job_list(request):
                 'salary': '10,00,000',
                 'location': 'Bangalore, India'
             },
-            {
-                'title': 'Technical Manager',
-                'description': 'Lead technical team projects and ensure timely delivery.',
-                'salary': '15,00,000',
-                'location': 'Pune, India'
-            },
-            {
-                'title': 'Frontend Developer',
-                'description': 'Create responsive and user-friendly web designs.',
-                'salary': '7,00,000',
-                'location': 'Remote'
-            },
-            {
-                'title': 'Backend Developer',
-                'description': 'Build robust backend APIs and manage databases.',
-                'salary': '9,00,000',
-                'location': 'Hyderabad, India'
-            },
-            {
-                'title': 'DevOps Engineer',
-                'description': 'Automate deployments and server management.',
-                'salary': '11,00,000',
-                'location': 'Chennai, India'
-            },
-            {
-                'title': 'UI/UX Designer',
-                'description': 'Design user interfaces for web and mobile apps.',
-                'salary': '6,50,000',
-                'location': 'Mumbai, India'
-            },
-            {
-                'title': 'Mobile App Developer',
-                'description': 'Build and maintain Android/iOS mobile apps.',
-                'salary': '8,50,000',
-                'location': 'Remote'
-            },
-            {
-                'title': 'Data Scientist',
-                'description': 'Analyze data and build predictive models.',
-                'salary': '12,00,000',
-                'location': 'Bangalore, India'
-            },
-            {
-                'title': 'Project Coordinator',
-                'description': 'Coordinate between teams and ensure smooth project execution.',
-                'salary': '7,50,000',
-                'location': 'Delhi, India'
-            },
         ]
+    jobsList = jobs   
 
     if query:
-        dummy_jobs = [job for job in dummy_jobs if query.lower() in job['title'].lower()]
-    return render(request, 'jobs/job_list.html', {'jobs': dummy_jobs, 'query': query})
+        jobsList = [job for job in jobs if query.lower() in job['title'].lower()]
+    return render(request, 'jobs/job_list.html', {'jobs': jobsList, 'query': query})
+
+from django.shortcuts import render, redirect
 
 @login_required
 def job_create(request):
-    return render(request, 'jobs/job_create.html')  # Later form handling here\
- 
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        salary = request.POST.get('salary')
+        location = request.POST.get('location')
+        category = request.POST.get('category')
+        company = request.POST.get('company')
+
+        # Save job
+        Job.objects.create(
+            title=title,
+            description=description,
+            salary=salary,
+            location=location,
+            category=category,
+            company=company,
+            posted_by=request.user
+        )
+
+        return redirect('job_list')  # Make sure 'job_list' is the correct URL name
+
+    return render(request, 'jobs/job_create.html')
+
+
 
 @login_required
 def job_apply(request, job_id):
-    # Fetch the job that the user wants to apply for
-    # job = get_object_or_404(Job, id=job_id)
-    
-    # Handle the logic for job application (e.g., saving the application, sending an email, etc.)
-    # For now, we just display a confirmation message
 
     return render(request, 'jobs/job_apply.html', {'job': "job"})        

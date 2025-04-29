@@ -13,13 +13,10 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            
             from .models import Profile
-            
             profile, created = Profile.objects.get_or_create(user=user)
             profile.user_type = form.cleaned_data.get('user_type')
             profile.save()
-            
             return redirect('redirect_dashboard')  # or wherever you want to redirect
     else:
         form = RegisterForm()
@@ -35,6 +32,7 @@ def login_view(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
+            
             if user is not None:
                 login(request, user)
                 return redirect('redirect_dashboard')  
