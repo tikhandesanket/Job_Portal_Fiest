@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Job
 
@@ -6,7 +6,7 @@ from .models import Job
 def job_list(request):
     query = request.GET.get('q', '')
 
-    jobs_qs = Job.objects.all()
+    jobs_qs = Job.objects.filter(posted_by=request.user)
     using_dummy_data = not jobs_qs.exists()
 
     if using_dummy_data:
