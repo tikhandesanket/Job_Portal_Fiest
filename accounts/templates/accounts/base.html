@@ -24,16 +24,27 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'job_list' %}">Jobs</a>
-            </li>
+            {% if profile.user_type == "recruiter" %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'job_create' %}">Post a Job</a>
             </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'job_list' %}"
+                >Manage Listings</ausers = User.objects.all().order_by('id')
+
+              >
+            </li>
+
+            {% endif %}
           </ul>
+
           <ul class="navbar-nav">
             {% if user.is_authenticated %}
             <li class="nav-item">
+              <span class="navbar-brand"
+                >Welcome {{ user.username  }}</span
+              >
               <a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </li>
             {% else %}

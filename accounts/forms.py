@@ -4,10 +4,10 @@ from django.core.exceptions import ValidationError
 
 
 # Remove the import of Profile at the top to avoid circular import
-# from .models import Profile
+# from .models import Profile 
 
 class RegisterForm(forms.ModelForm):
-    user_type = forms.ChoiceField(choices=[('applicant', 'Employer'), ('recruiter', 'Job Seeker')])
+    user_type = forms.ChoiceField(choices=[('recruiter', 'Employer'), ('applicant', 'Job Seeker')])
     password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         model = User

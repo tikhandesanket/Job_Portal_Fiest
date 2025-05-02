@@ -1,8 +1,11 @@
 {% extends "accounts/base.html" %} {% block content %}
 <div class="container py-5">
-  <h1 class="mb-4 text-center">Available Jobs</h1>
+  <h1 class="mb-4 text-center">Jobs List {{user}}</h1>
 
   <!-- Search Bar -->
+  {% if user.is_authenticated and user.profile.user_type == "recruiter" %}
+  <a href="{% url 'job_create' %}" class="btn btn-primary">Post a Job</a>
+  {% endif %}
   <form method="GET" class="d-flex mb-5" role="search">
     <input
       class="form-control me-2"
