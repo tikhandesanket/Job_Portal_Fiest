@@ -38,7 +38,8 @@ def login_view(request):
                 return redirect('redirect_dashboard')  
     else:
         form = LoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+        profile = Profile.objects.get(user=user)
+    return render(request, 'accounts/login.html', {'form': form,"profile": profile})
 
     if request.method == 'POST':
         form = LoginForm(request.POST)

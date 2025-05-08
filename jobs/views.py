@@ -1,11 +1,16 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Job
+from accounts.models import Profile
+from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def job_list(request):
     query = request.GET.get('q', '')
-
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    # import ipdb; ipdb.set_trace()
     jobs_qs = Job.objects.filter(posted_by=request.user)
     using_dummy_data = not jobs_qs.exists()
 
@@ -34,7 +39,7 @@ def job_list(request):
         else:
             jobsList = jobs_qs
 
-    return render(request, 'jobs/job_list.html', {'jobs': jobsList, 'query': query})
+    return render(request, 'jobs/job_list.html', {'jobs': jobsList, 'query': query,'profile': profile})
 
 
 @login_required
