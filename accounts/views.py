@@ -35,11 +35,16 @@ def login_view(request):
             
             if user is not None:
                 login(request, user)
-                return redirect('redirect_dashboard')  
+
+                # FIX: Prevent crash if profile is missing
+                profile, created = Profile.objects.get_or_create(user=user)
+
+                return redirect('redirect_dashboard')  # or another URL
     else:
         form = LoginForm()
-        profile = Profile.objects.get(user=user)
-    return render(request, 'accounts/login.html', {'form': form,"profile": profile})
+    
+    return render(request, 'accounts/login.html', {'form': form})
+
 
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -62,13 +67,13 @@ def home_view(request):
 
 @login_required
 def redirect_dashboard(request):
-    
+    # import ipdb; ipdb.set_trace()    
     user = request.user
     
     if user.is_superuser:
         return redirect('admin_dashboard')  # Define this view for admin
     try:
-        # import ipdb; ipdb.set_trace()
+        
         profile = Profile.objects.get(user=user)
         if profile.user_type == 'applicant':
             return redirect('job_list')  # applicant → view jobs

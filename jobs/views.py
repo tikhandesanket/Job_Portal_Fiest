@@ -44,6 +44,9 @@ def job_list(request):
 
 @login_required
 def job_create(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    # import ipdb; ipdb.set_trace()
     if request.method == 'POST':
         title = request.POST.get('title')
         description = request.POST.get('description')
@@ -63,9 +66,9 @@ def job_create(request):
             posted_by=request.user
         )
 
-        return redirect('job_list')  # Make sure 'job_list' is the correct URL name
+        return redirect('job_list',{'profile': profile})  # Make sure 'job_list' is the correct URL name
 
-    return render(request, 'jobs/job_create.html')
+    return render(request, 'jobs/job_create.html',{'profile': profile})
 
 
 

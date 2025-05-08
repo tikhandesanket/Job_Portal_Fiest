@@ -13,9 +13,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'job_list' %}">Job Portal</a>
-          {% if user.is_authenticated and profile.user_type == "recruiter" %}
+          {% if user is not None and user.is_authenticated and profile.user_type == "recruiter" %}
             <a href="{% url 'job_create' %}" class="text-white ">Post a Job</a>
-          {% elif user.is_authenticated and profile.user_type == "applicant" %}
+            <a href="{% url 'job_list' %}" class="text-white ">Manage Listings</a>
+          {% elif user is not None and user.is_authenticated and profile.user_type == "applicant" %}
             <a href="{% url 'job_list' %}" class="text-white ">Job List</a>
           {% endif %}
         <button
@@ -36,9 +37,7 @@
 
             <li class="nav-item">
               <a class="nav-link" href="{% url 'job_list' %}"
-                >Manage Listings</ausers = User.objects.all().order_by('id')
-
-              >
+                >Manage Listings</ausers = User.objects.all().order_by('id') >
             </li>
 
             {% endif %}
