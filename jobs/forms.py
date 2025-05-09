@@ -4,4 +4,4 @@ from .models import Job
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields =  '__all__'
+        fields = ['title', 'company', 'category', 'location', 'salary', 'description']

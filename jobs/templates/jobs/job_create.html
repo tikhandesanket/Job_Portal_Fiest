@@ -1,47 +1,81 @@
 {% extends "accounts/base.html" %} {% block content %}
 <div class="container py-5">
-  <h1 class="text-center mb-4">Post a New Job</h1>
+  <!-- Dynamic title depending on edit mode -->
+  <h1 class="text-center mb-4">
+    {% if edit_mode %} Edit Job {% else %} Post a New Job {% endif %}
+  </h1>
 
   <form method="POST" class="p-4 bg-white shadow rounded">
     {% csrf_token %}
 
+    <!-- Job Title -->
     <div class="mb-3">
       <label class="form-label">Job Title</label>
-      <input type="text" class="form-control" name="title" required />
+      <input type="text" class="form-control" name="title" value="{{ form.instance.title }}" />
+
     </div>
 
+    <!-- Company -->
     <div class="mb-3">
       <label class="form-label">Company</label>
-      <input type="text" class="form-control" name="company" required />
+      <input
+        type="text"
+        class="form-control"
+        name="company"
+        value="{{ form.company.value }}"
+        required
+      />
     </div>
 
+    <!-- Category -->
     <div class="mb-3">
       <label class="form-label">Category</label>
-      <input type="text" class="form-control" name="category" required />
+      <input
+        type="text"
+        class="form-control"
+        name="category"
+        value="{{ form.category.value }}"
+        required
+      />
     </div>
 
+    <!-- Location -->
     <div class="mb-3">
       <label class="form-label">Location</label>
-      <input type="text" class="form-control" name="location" required />
+      <input
+        type="text"
+        class="form-control"
+        name="location"
+        value="{{ form.location.value }}"
+        required
+      />
     </div>
 
+    <!-- Salary -->
     <div class="mb-3">
       <label class="form-label">Salary (per year)</label>
-      <input type="number" class="form-control" name="salary" required />
+      <input
+        type="number"
+        class="form-control"
+        name="salary"
+        value="{{ form.salary.value }}"
+        required
+      />
     </div>
 
+    <!-- Description -->
     <div class="mb-3">
       <label class="form-label">Description</label>
-      <textarea
-        class="form-control"
-        name="description"
-        rows="5"
-        required
-      ></textarea>
+      <textarea class="form-control" name="description" rows="5" required>
+{{ form.description.value }}</textarea
+      >
     </div>
 
+    <!-- Submit Button -->
     <div class="d-grid">
-      <button type="submit" class="btn btn-primary btn-block">Post Job</button>
+      <button type="submit" class="btn btn-primary btn-block">
+        {% if edit_mode %} Update Job {% else %} Post Job {% endif %}
+      </button>
     </div>
   </form>
 </div>

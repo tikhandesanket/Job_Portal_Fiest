@@ -12,7 +12,7 @@ def job_list(request):
     query = request.GET.get('q', '')
     user = request.user
     profile = Profile.objects.get(user=user)
-    # import ipdb; ipdb.set_trace()
+
     jobs_qs = Job.objects.filter(posted_by=request.user)
     using_dummy_data = not jobs_qs.exists()
 
@@ -41,7 +41,12 @@ def job_list(request):
         else:
             jobsList = jobs_qs
 
-    return render(request, 'jobs/job_list.html', {'jobs': jobsList, 'query': query,'profile': profile})
+    return render(request, 'jobs/job_list.html', {
+        'jobs': jobsList,
+        'profile': profile,
+        'query': query,
+    })
+
 
 
 @login_required
@@ -68,7 +73,7 @@ def job_create(request):
             posted_by=request.user
         )
 
-        return redirect('job_list',{'profile': profile})  # Make sure 'job_list' is the correct URL name
+        return redirect('job_list')  # Make sure 'job_list' is the correct URL name
 
     return render(request, 'jobs/job_create.html',{'profile': profile})
 
@@ -84,19 +89,24 @@ def job_apply(request, job_id):
 def job_edit(request, job_id):
     user = request.user
     profile = Profile.objects.get(user=user)
+
     job = get_object_or_404(Job, id=job_id)
-    if profile.user_type != "recruiter":
-        return redirect("job_list",{'profile': profile})  # Prevent unauthorized edit
 
     if request.method == "POST":
-        form = JobForm(request.POST, instance=job)
+        # import ipdb; ipdb.set_trace()
+        form = JobForm(request.POST, instance=job)  # Bind the job instance to the form
         if form.is_valid():
             form.save()
-            return redirect("job_list",{'profile': profile})
+            return redirect('job_list')  # Redirect to the job list after saving the edited job
     else:
-        form = JobForm(instance=job)
+        form = JobForm(instance=job)  # Pre-fill the form with job data when editing
 
-    return render(request, "jobs/job_create.html", {"form": form, "edit_mode": True,'profile': profile})
+    return render(request, "jobs/job_create.html", {
+        "form": form, 
+        "edit_mode": True,  # Indicate it's an edit operation
+        "profile": profile
+    })
+
 
 @login_required
 def job_delete(request, job_id):
