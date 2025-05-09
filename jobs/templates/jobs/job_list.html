@@ -28,7 +28,11 @@
           <p class="card-text">{{ job.description }}</p>
           <p class="card-text"><strong>Salary:</strong> ₹{{ job.salary }}</p>
 
+          {% if user.is_authenticated and profile.user_type == "recruiter" %}
+          <a href="{% url 'job_edit' job.id %}" class="btn btn-primary">Edit</a>
+          {% else %}
           <a href="#" class="btn btn-primary">Apply</a>
+          {% endif %}
         </div>
       </div>
     </div>
