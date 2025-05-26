@@ -5,6 +5,7 @@ from accounts.models import Profile
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from jobs.forms import JobForm
+from .models import Job, UserJob
 
 
 @login_required
@@ -81,8 +82,12 @@ def job_create(request):
 
 @login_required
 def job_apply(request, job_id):
-
-    return render(request, 'jobs/job_apply.html', {'job': "job"})        
+    job = get_object_or_404(Job, id=job_id)
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    if not UserJob.objects.filter(user=request.user, job=job).exists():
+        UserJob.objects.create(user=request.user, job=job)
+    return redirect("jobs_list")   
 
 
 @login_required

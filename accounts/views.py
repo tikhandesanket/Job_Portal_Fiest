@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Profile
 from accounts.models import Profile
 
+
 # Register View
 def register_view(request):
     if request.method == 'POST':

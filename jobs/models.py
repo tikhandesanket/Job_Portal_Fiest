@@ -9,6 +9,13 @@ class Job(models.Model):
     category = models.CharField(max_length=100)
     company = models.CharField(max_length=100)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+class UserJob(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    applied_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together = ('user', 'job')    
 
 class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -27,3 +34,4 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.user_type}"
+    

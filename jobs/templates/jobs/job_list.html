@@ -30,9 +30,14 @@
 
           {% if user.is_authenticated and profile.user_type == "recruiter" %}
           <a href="{% url 'job_edit' job.id %}" class="btn btn-primary">Edit</a>
+          {% else %} {% if job.id in applied_job_ids %}
+          <button class="btn btn-success" disabled>Applied</button>
           {% else %}
-          <a href="#" class="btn btn-primary">Apply</a>
-          {% endif %}
+          <form method="POST" action="{% url 'apply_job' job.id %}">
+            {% csrf_token %}
+            <button class="btn btn-primary">Apply</button>
+          </form>
+          {% endif %} {% endif %}
         </div>
       </div>
     </div>
