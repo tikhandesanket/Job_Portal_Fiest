@@ -27,9 +27,6 @@
           <h6 class="card-subtitle mb-2 text-muted">{{ job.location }}</h6>
           <p class="card-text">{{ job.description }}</p>
           <p class="card-text"><strong>Salary:</strong> ₹{{ job.salary }}</p>
-
-          <p class="card-text"><strong>job:</strong> ₹{{ job.id }}</p>
-
           {% if user.is_authenticated and profile.user_type == "recruiter" %}
           <a href="{% url 'job_edit' job.id %}" class="btn btn-primary">Edit</a>
           {% else %} {% if job.id in applied_job_ids %}
