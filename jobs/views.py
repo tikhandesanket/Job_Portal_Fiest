@@ -16,16 +16,19 @@ def job_list(request):
 
     jobs_qs = Job.objects.filter(posted_by=request.user)
     using_dummy_data = not jobs_qs.exists()
-
+    applied_job_ids = UserJob.objects.filter(user=user).values_list('job_id', flat=True)
+    print(f"applied_job_ids: {applied_job_ids}")
     if using_dummy_data:
         jobs = [
             {
+                 'id': 11,
                 'title': 'Software Developer',
                 'description': 'Develop and maintain software applications.',
                 'salary': '8,00,000',
                 'location': 'Mumbai, India'
             },
             {
+                 'id': 112,
                 'title': 'Full Stack Developer',
                 'description': 'Work on frontend and backend systems.',
                 'salary': '10,00,000',
@@ -33,9 +36,10 @@ def job_list(request):
             },
         ]
         if query:
-            jobsList = [job for job in jobs if query.lower() in job['title'].lower()]
+             filtered = [job for job in jobs if query.lower() in job['title'].lower()]
+             jobsList = filtered if filtered else jobs  # fallback to all jobs if none matched
         else:
-            jobsList = jobs
+            jobsList = Job.objects.all() or jobs
     else:
         if query:
             jobsList = jobs_qs.filter(title__icontains=query)
@@ -46,6 +50,7 @@ def job_list(request):
         'jobs': jobsList,
         'profile': profile,
         'query': query,
+        'applied_job_ids':applied_job_ids,
     })
 
 
@@ -81,13 +86,13 @@ def job_create(request):
 
 
 @login_required
-def job_apply(request, job_id):
+def apply_job(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     user = request.user
     profile = Profile.objects.get(user=user)
     if not UserJob.objects.filter(user=request.user, job=job).exists():
         UserJob.objects.create(user=request.user, job=job)
-    return redirect("jobs_list")   
+    return redirect("job_list")   
 
 
 @login_required

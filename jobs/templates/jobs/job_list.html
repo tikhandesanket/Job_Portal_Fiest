@@ -28,16 +28,20 @@
           <p class="card-text">{{ job.description }}</p>
           <p class="card-text"><strong>Salary:</strong> ₹{{ job.salary }}</p>
 
+          <p class="card-text"><strong>job:</strong> ₹{{ job.id }}</p>
+
           {% if user.is_authenticated and profile.user_type == "recruiter" %}
           <a href="{% url 'job_edit' job.id %}" class="btn btn-primary">Edit</a>
           {% else %} {% if job.id in applied_job_ids %}
           <button class="btn btn-success" disabled>Applied</button>
-          {% else %}
+          {% else %} {% if job.id %}
           <form method="POST" action="{% url 'apply_job' job.id %}">
             {% csrf_token %}
             <button class="btn btn-primary">Apply</button>
           </form>
-          {% endif %} {% endif %}
+          {% else %}
+          <span class="text-danger">Invalid Job</span>
+          {% endif %} {% endif %} {% endif %}
         </div>
       </div>
     </div>
